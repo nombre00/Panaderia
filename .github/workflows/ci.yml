@@ -1,0 +1,26 @@
+name: Verificar Push del Catálogo de Pastelería
+
+# Define los eventos que desencadenan el workflow
+on:
+  push:
+    branches:
+      - main  # Cambia a la rama que uses (por ejemplo, 'master' si es tu caso)
+
+# Define los trabajos (jobs) que se ejecutarán
+jobs:
+  check-push:
+    runs-on: ubuntu-latest  # Máquina virtual con Ubuntu
+    steps:
+      # Paso 1: Clona el repositorio
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      # Paso 2: Lista los archivos del repositorio
+      - name: Mostrar archivos subidos
+        run: |
+          echo "Archivos en el repositorio:"
+          ls -la
+
+      # Paso 3: Mensaje de confirmación
+      - name: Confirmar push
+        run: echo "¡Push detectado en la rama main."
