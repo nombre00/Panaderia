@@ -3,21 +3,53 @@
     
     <Head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- Para que sea responsivo en móviles -->
         <title>Inicio</title>
         <link rel="stylesheet" href="./css/styles.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    </Head>
-    <!-- Acá va todo lo que se ve en la página. -->
-    <body>
-        <header>
-
-            <h1>Bienvenido a la página de inicio</h1>
-        </header>
-    
-    
-    
-
         
+        <header class="container">
+            <!-- Título de la página. -->
+            <h1 class="text-center">Mi tienda online</h1>
+            <p> <br></p>
+            <!-- nav es para hacer barras de navegación. <a> es para agregar un hipervínculo. -->
+            <nav>
+                <a href="carrito.html"> Carrito</a>
+                <a href="catalogo.html"> Catalogo</a>
+                <a href="p_inicio.html" class="active"> Inicio</a>
+                <a href="perfil.html"> Perfil</a>
+            </nav>
+        </header>
+        <!-- Descripción de la pagina: inicio de sesión del usuario. -->
+
+        <p> <br><br></p>
+        <main class="container card">
+            <h1></h1>
+            <h3 >Iniciar Sesion</h3>
+            <form>
+                <!-- explicacion!!!. -->
+                <div class="mb-3">
+                    <!-- expliacion!!! -->
+                    <label for="exampleInputEmail1" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Ej: usuario@hotmail.cl">
+                   
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Ingrese su contraseña">
+                </div>
+               
+            
+            
+        </main>
+        
+    
+    
+
+        <footer class="text-center">
+            <p> <br><br><br><br><br><br></p>
+            Pie de página
+        </footer>
+        <script src="app.js"></script>
     </body>
 </html>
