@@ -4,15 +4,33 @@ nav a {
   padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid transparent;
+  background-color: #C7E5EB;
+  
+  
+  
 } 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  
+  
+  
 }
 .catalogo {
   max-width: 1500px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
+}
+.container_card {
+  background-color: #F5C1E8;
+  
+
+}
+
+.foto{
+  
+  max-width: 300px;
+  max-height: 250px;
 }
