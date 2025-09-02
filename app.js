@@ -7,9 +7,9 @@ function setCookie(name, value, maxTime){
     // Encriptamos los datos que la cookie guarda, definimos el tiempo de vida de la cookie, le decimos que la guarde y que se pued usar en tódas las páginas del sitio.
     // El único valor que estamos guardando es valor, el nombre es el keyValue para reconocer a la cookie.
     // Todos los signos igual tienen que estar juntitos.
-    document.cookie = ` ${encodeURIComponent(name)}=${encodeURIComponent(value)}; Max-Age=${maxTime}; Path=/; SameSite=LAx`;
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; Max-Age=${maxTime}; Path=/; SameSite=LAx`;
     // Esta segunda cookie es para avisar al usuario el tiempo de vida de la cookie de arriba.
-    document.cookie = ` ${encodeURIComponent(name)}_expireAt= ${expireAt}; Max-Age=${maxTime}; Path=/; SameSite=LAx`;
+    document.cookie = `${encodeURIComponent(name)}_expireAt= ${expireAt}; Max-Age=${maxTime}; Path=/; SameSite=LAx`;
 };
 
 /* correo = "correo";
@@ -23,7 +23,7 @@ function getCookie(name){
     // Una promesa es una función o una acción que va a esperar a un resultado para ejecutarse.
     // Mientras espera el resultado de la promesa se ejecuta la siguiente linea de código.
     // 'acc' sería un objeto de la cadena y 'c' sería la cadena entera.
-    document.cookie.split("; ").reduce((acc, c) => {
+    return document.cookie.split("; ").reduce((acc, c) => {
         // Retorna una subcadena que se todos los datos despues del nombre de la cookie.
         if(c.startsWith(target)) return decodeURIComponent(c.substring(target.length));
         return acc;
@@ -48,7 +48,7 @@ const form_inicio = document.getElementById("inicio")
 const msg = document.getElementById("msg");
 
 // Datos de la página registrarse.
-const r_mail = document.getElementById("mail_regitro");
+const r_mail = document.getElementById("mail_registro");
 const r_clave = document.getElementById("clave_registro");
 const form_registro = document.getElementById("formulario_registro");
 
@@ -84,12 +84,15 @@ function init(){
         msg.textContent = "Por favor, escribe una contraseña válido.";
         return;
         }
-        const existing = getCookie("1001");
-        if (existing) {
-            msg.textContent = `Ya tenemos tu email (“${existing}”). Puedes ir a tu perfil.`;
+        const existing_ini_mail = getCookie("1001");
+        const existing_ini_clave = getCookie("2001");
+        if (existing_ini_mail && existing_ini_mail === email && existing_ini_clave&& existing_ini_clave===pass) {
+            window.location.href = "perfil.html";
+            
+            return;
         }
     // setCookie("Email", mail,240 * 1); // 1 Min
-        msg.textContent = `${existing} y ${email+pass}`;
+        msg.textContent = `${existing} y ${email+pass}`; // acá salta el error.
         })
 
         // Funcionalidad de botón registrase.
@@ -110,30 +113,31 @@ function init(){
         }else{
             falg = false
         }
-        //alert("el if del boton vaciar funciona")
+        //console.log("el if del boton vaciar funciona")
         // Función para mostrar los productos del carrito.
         // Toma los elementos del carrego "carrito" y genera dinamicamente cada producto que se muestra en pantalla.
         function mostrarCarrito(){
             // Partimos vaciando la lista de productos del carrito.
             listaCarrito.innerHTML = '';
             // Luego verificamos el estado del carrio, si tiene o no productos.
-            alert(carrito.length);
+            console.log(carrito.id);
+            console.log(carrito.length);
             if (flag){
-                alert("si el carrito tiene longitud 0 se ve esto.")
+                console.log("si el carrito tiene longitud 0 se ve esto.")
                 // Si el carrito está vacío:
                 // Escondemos la lista.
                 listaCarrito.style.display = "none";
-                alert("Si se corre todo el codigo hasta aca 1")
+                console.log("Si se corre todo el codigo hasta aca 1")
                 // Mostramos el mensaje.
                 carritoVacio.style.display = "block";
-                alert("Si se corre todo el codigo hasta aca 2")
+                console.log("Si se corre todo el codigo hasta aca 2")
                 // Asignamos 0 al costo del carrito.
                 precioCarrito.textContent = 0;
-                alert("Si se corre todo el codigo hasta aca 3")
+                console.log("Si se corre todo el codigo hasta aca 3")
                 // Salimos.
                 return;
             }
-            alert("Si el carrito tiene longitud más de 0 se ve esto.")
+            console.log("Si el carrito tiene longitud más de 0 se ve esto.")
             // Si el carrito tiene productos.
             // Inicializamos el total.
             let total = 0;
@@ -205,7 +209,7 @@ function init(){
         function vaciarCarrito(){
             carrito = []; // Seteamos el carrito a una lista vacía.
             localStorage.setItem('carrito',JSON.stringify(carrito)); // Guardamos los cambios.
-            alert("Productos eliminados del carrito."); // Lanzamos una alerta.
+            console.log("Productos eliminados del carrito."); // Lanzamos una alerta.
             mostrarCarrito() // Recargamos el carrito y lo mostramos.
         }
 
@@ -217,7 +221,7 @@ function init(){
         })
         // Escuchador del actualizador del carrito.
         if (listaCarrito) {
-            // alert("el escuchador de la lista funciona.")
+            // console.log("el escuchador de la lista funciona.")
             document.addEventListener('DOMContentLoaded', mostrarCarrito);
         }
     }
@@ -231,12 +235,12 @@ function init(){
         actualizarContadorCarrito();
         // Función para actualizar el contador del carrito
         function actualizarContadorCarrito() {
-            if (contadorCarrito && precioTotal) {
+            if (contadorCarrito) {
                 const totalProductos = carrito.reduce((sum, item) => sum + item.cantidad, 0);
                 contadorCarrito.textContent = totalProductos;
-                // .reduce hace que la linea no se ejecute si no hay algo que reducir. Esta parte no funciona, no se por qué.
+                /* // .reduce hace que la linea no se ejecute si no hay algo que reducir. Esta parte no funciona, no se por qué.
                 const totalPrecio = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
-                precioTotal.textContent = totalPrecio; 
+                precioTotal.textContent = totalPrecio;  */
             }
         }
         // Función que obtiene la info del producto asociado a cada botón asociado a la clase producto.
@@ -246,44 +250,77 @@ function init(){
             const article = boton.closest('.producto');
             const nombre = article.querySelector('h4').textContent; // Tomamos el nombre del producto.
             // Aprobechamos el <strong> que usamos para remarcar el precio y lo usamos como marcador para recuperar el precio.
-            const precioTexto = article.querySelector('p strong').textContent; // Tomamos el precio del producto, ejemplo: "Precio: $19.000".
+            const precioTexto = article.querySelector('span').textContent; // Tomamos el precio del producto, ejemplo: "Precio: $19.000".
             const precio = parseInt(precioTexto.replace(/[^0-9]/g, '')); // Eliminamos comas y espacios del número.
             // Tomamos la id del botón, usamos esa id en futuras adiciones para revisar si el producto ya existe en el carrito.
             const id = boton.id;
             const imagen = article.querySelector('img').getAttribute('src'); // Tomamos la ruta de la imagen y la guardamos para futuras acciones.
             // Guardamos todo dentro de una lista y la retornamos.
-            return { id, nombre, precio, cantidad: 1, imagen };
+            let cantidad = 1;
+            console.log(id);
+            console.log(nombre);
+            console.log(precio); // El precio sale mal.   arreglado.
+            console.log(cantidad);
+            console.log(imagen);
+            return { id, nombre, precio, cantidad, imagen };
         }
         // Función que agrega un producto al carrito.
         function agregarAlCarrito(producto) {
+            console.log(producto.id);
+            console.log(producto.nombre);
+            console.log(producto.precio); // El precio sale mal.   arreglado.
+            console.log(producto.cantidad);
+            console.log(producto.imagen);
+            
             // Primero revisamos que el producto que queremos agregar no exista ya.
             const existente = carrito.find(item => item.id === producto.id);
+            console.log("hasta acá bien 1");
             // Si existe le aumentamos la cantidad.
             if (existente) {
                 existente.cantidad += 1;
+                console.log("hasta acá bien 2");
             } else {
                 // Si no existe le agregamos el nuevo producto al carrito.
                 carrito.push(producto);
+
+                let ultimo = carrito.length -1;
+
+                console.log("hasta acá bien 3");
+                console.log(carrito.length); // ******Acá tengo el problema, la info no aparece.
+                console.log(carrito[ultimo].id);
+                console.log(carrito[ultimo].nombre);
+                console.log(carrito[ultimo].precio);
+                console.log(carrito[ultimo].imagen);
             }
             // Hecho el cambio guardamos el carrito en el local storage como un JSON, llave ('carrito'): valor (info del carrito).
             localStorage.setItem('carrito', JSON.stringify(carrito));
+            console.log("hasta acá bien 4");
             // Imprime el carrito en la consola del navegador.
             console.log('Carrito actualizado:', carrito);
+            console.log("hasta acá bien 5");
             // Muestra un mensaje en pantalla avisándole al usuario que el producto se agregó al carrito.
-            alert(`${producto.nombre} agregado al carrito!`);
-            actualizarContadorCarrito(); // Actualizar el contador después de agregar.
+            console.log(`${producto.nombre} agregado al carrito!`);
+            actualizarContadorCarrito(); // Actualizar el contador después de agregar.   ****acá está el problema.
+            console.log("hasta acá bien 6"); 
         }
 
         // Escuchadores.
         // Escuchador de los botones de compra.
         // Iteramos por cada botón del NodeList 'botonesCompra' usando el método 'forEach'.
         botonesCompra.forEach(boton => {
+
+            let ultimo = carrito.length -1;
+
             // Por cada botón escuchamos a ver si lo presionan.
             boton.addEventListener('click', () => {
                 // Si lo presionan llamamos la funcion que toma la info del producto y la guarda en una variable.
                 const producto = obtenerDetallesProducto(boton);
                 agregarAlCarrito(producto); // Agregamos esa variable al carrito.
-                alert(carrito.length)
+                console.log(carrito.length); // ******Acá también tengo el problema, la info no aparece.
+                //console.log(carrito[ultimo].id);
+                console.log(carrito[ultimo].nombre);
+                console.log(carrito[ultimo].precio);
+                console.log(carrito[ultimo].imagen);
             });
         });
     }
@@ -299,8 +336,8 @@ function init(){
         form_registro.addEventListener("submit", (e) => {
             e.preventDefault();
             // Tomamos la información del formulario.
-            const r_mail = document.getElementById("mail_regitro").trim();
-            const r_clave = document.getElementById("clave_registro").trim();
+            const r_mail = document.getElementById("mail_registro").value.trim();
+            const r_clave = document.getElementById("clave_registro").value.trim();
             msg.textContent= r_mail+r_clave;
             // Revisamos que haya información en los campos.
             if (!r_mail) {
@@ -311,11 +348,17 @@ function init(){
             msg.textContent = "Por favor, escribe una contraseña válido.";
             return;
             }
+            existingmail = getCookie("1001");
+            if (existingmail && existingmail===r_mail){
+                msg.textContent="Ya existe el mail";
+                return;
+
+            }
             // Si hay info creamos guardamos los datos en cookies.
             setCookie("1001", r_mail, 30);
             setCookie("2001", r_clave, 30);
-            
-            msg.textContent= r_mail+r_clave;
+
+            msg.textContent = "Se ha guardado exitosamente.";
         })
     }
 
