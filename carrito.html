@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
     
-    <Head>
+    <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- Para que sea responsivo en móviles -->
         <title>Inicio</title>
         <link rel="stylesheet" href="./css/styles.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    </Head>
+    </head>
     <!-- Acá va todo lo que se ve en la página. -->
     <body>
         <header class="container">
@@ -23,9 +23,37 @@
             </nav>
         </header>
         <!-- Descripción de la página: carrito de compra del usuario. -->
+
+        <!-- Funcionalidad del carrito: agregar, borrar 1 producto, borrar todos los productos. -->
+        <button id="borrar_carrito">Borrar carrito</button>
+
+        <!-- Título de la lista de productos. -->
+        <p> <br></p>
+        <h4>Productos en el carrito.</h4>
+
+        <!-- Lista de productos en el carrito. -->
+        <!-- <section> es para crear una seccion separada del resto de la página. -->
+        <section>
+            <!-- <ul> es la etiqueta de una lista. -->
+            <ul id="lista_carrito">
+                
+            </ul>
+            <!-- Esto es un mensaje que indica que la lista esá vacía cuando está vacía. -->
+             <div id="carrito_vacio" style="display: none;"> <!-- style="display: none;" -->
+                <p>El carrito está vacío. <a href="catalogo.html">Visita nuestro catálogo c:</a></p>
+             </div>
+        </section>
+
+        <!-- Resumen del carrito. -->
+        <div id="resumen_carrito">
+            <h4>Resumen del pedido.</h4>
+            <p>Total: $<span id="costo_carrito">0</span></p>
+            <button id="pago">Pagar.</button>
+        </div>
     
     
 
+        <p> <br></p>
         <footer>
             Pie de página.
         </footer>

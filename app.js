@@ -57,6 +57,12 @@ const botonesCompra = document.querySelectorAll('.boton_compra');  // Obtener to
 const contadorCarrito = document.getElementById('contador-carrito');  // Obtiene el contador de productos en el carrito.
 const precioTotal = document.getElementById('precio-total');  // Obtiene va lariable que guarda el precio total del carrito.
 
+// Datos de la página carrito de compras.
+const botonVaciarCarrito = document.getElementById("borrar_carrito"); // Borra el carrito.
+const listaCarrito = document.getElementById("lista_carrito"); // Lista de productos en el carrito.
+const carritoVacio = document.getElementById("carrito_vacio"); // Mensaje que se muestra cuando el carrito está vacío.
+const precioCarrito = document.getElementById("costo_carrito"); // Costo total del carrito.
+
 
 function init(){
     // Antes de acceder a cualquier funcionalidad se pregunta si existe un elemento exclusivo de cada página, cosa de asegurarnos
@@ -97,6 +103,124 @@ function init(){
 
 
     // Funcionalidad página carrito.
+    if (botonVaciarCarrito){
+        let flag = true;
+        if (carrito.length === 0){
+            flag = true;
+        }else{
+            falg = false
+        }
+        //alert("el if del boton vaciar funciona")
+        // Función para mostrar los productos del carrito.
+        // Toma los elementos del carrego "carrito" y genera dinamicamente cada producto que se muestra en pantalla.
+        function mostrarCarrito(){
+            // Partimos vaciando la lista de productos del carrito.
+            listaCarrito.innerHTML = '';
+            // Luego verificamos el estado del carrio, si tiene o no productos.
+            alert(carrito.length);
+            if (flag){
+                alert("si el carrito tiene longitud 0 se ve esto.")
+                // Si el carrito está vacío:
+                // Escondemos la lista.
+                listaCarrito.style.display = "none";
+                alert("Si se corre todo el codigo hasta aca 1")
+                // Mostramos el mensaje.
+                carritoVacio.style.display = "block";
+                alert("Si se corre todo el codigo hasta aca 2")
+                // Asignamos 0 al costo del carrito.
+                precioCarrito.textContent = 0;
+                alert("Si se corre todo el codigo hasta aca 3")
+                // Salimos.
+                return;
+            }
+            alert("Si el carrito tiene longitud más de 0 se ve esto.")
+            // Si el carrito tiene productos.
+            // Inicializamos el total.
+            let total = 0;
+            // Nos aseguramos que la lista sea visible.
+            listaCarrito.style.display = "block";
+            // Escondemos el mensaje.
+            carritoVacio.style.display = "none";
+            // Recorremos el arreglo carrito.
+            // { id, nombre, precio, cantidad: 1, imagen }
+            carrito.forEach(producto => {
+                // Por cada producto en el carrito.
+                // Creamos un elemento 'list item'.
+                const li = document.createElement('li');
+                // Le asignamos una clase de bootstrap y otra para manipularlo.
+                li.classList.add('producto_lista_carrito'); // , 'list-group-item'
+                // Le asignamos un id.
+                li.id = `${producto.id}`;
+
+                // Creamos un artículo que va air dentro de cada 'li'.
+                const articulo = document.createElement('article');
+                articulo.classList.add('producto_en_carrito', 'd-flex', 'align-items-center', 'gap-3'); // Opcional, bootstrap.
+
+                // Creamos la imagen.
+                const imagen = document.createElement('img');
+                imagen.setAttribute('src', producto.imagen); // Usar producto.imagen para la ruta
+                imagen.setAttribute('alt', producto.nombre);
+                //imagen.classList.add('img-fluid', 'me-2'); // Opcional, bootstrap.
+                imagen.style.width = '50px'; // Tamaño fijo para la imagen
+
+                // Nombre
+                const nombre = document.createElement('p');
+                nombre.textContent = producto.nombre;
+                //nombre.classList.add('mb-0', 'me-2'); // Opcional, bootstrap.
+
+                // Precio.
+                const precio = document.createElement('p');
+                precio.textContent = `$${producto.precio}`;
+                //precio.classList.add('mb-0', 'me-2'); // Opcional, bootstrap.
+
+                // Cantidad
+                const cantidad = document.createElement('p');
+                cantidad.textContent = carrito.cantidad;
+
+                // Subtotal
+                const subtotal = document.createElement('p');
+                subtotal.textContent = `$${producto.precio * producto.cantidad}`;
+                //subtotal.classList.add('mb-0', 'me-2'); // Opcional, bootstrap.
+
+                // Agregar elementos al <article>
+                articulo.appendChild(imagen);
+                articulo.appendChild(nombre);
+                articulo.appendChild(precio);
+                articulo.appendChild(cantidad);
+                articulo.appendChild(subtotal);
+
+                // Agregar <article> al <li>
+                li.appendChild(articulo);
+
+                // Agregar <li> al <ul>
+                listaCarrito.appendChild(li);
+
+                // Actualizar el total
+                total += producto.precio * producto.cantidad;
+            });
+            // Actualizar el total en el resumen
+            costoCarrito.textContent = total;
+        }
+        // Función para vaciar el carrito de compras.
+        function vaciarCarrito(){
+            carrito = []; // Seteamos el carrito a una lista vacía.
+            localStorage.setItem('carrito',JSON.stringify(carrito)); // Guardamos los cambios.
+            alert("Productos eliminados del carrito."); // Lanzamos una alerta.
+            mostrarCarrito() // Recargamos el carrito y lo mostramos.
+        }
+
+        // Escuchadores.
+        // Escuchador del botón vaciarCarrito.
+        botonVaciarCarrito.addEventListener("click", () => {
+            // Si lo precionan llamamos a la función que borra los elementos del carrito.
+            vaciarCarrito(); // Borramos elementos del carrito.
+        })
+        // Escuchador del actualizador del carrito.
+        if (listaCarrito) {
+            // alert("el escuchador de la lista funciona.")
+            document.addEventListener('DOMContentLoaded', mostrarCarrito);
+        }
+    }
 
 
 
@@ -126,8 +250,9 @@ function init(){
             const precio = parseInt(precioTexto.replace(/[^0-9]/g, '')); // Eliminamos comas y espacios del número.
             // Tomamos la id del botón, usamos esa id en futuras adiciones para revisar si el producto ya existe en el carrito.
             const id = boton.id;
+            const imagen = article.querySelector('img').getAttribute('src'); // Tomamos la ruta de la imagen y la guardamos para futuras acciones.
             // Guardamos todo dentro de una lista y la retornamos.
-            return { id, nombre, precio, cantidad: 1 };
+            return { id, nombre, precio, cantidad: 1, imagen };
         }
         // Función que agrega un producto al carrito.
         function agregarAlCarrito(producto) {
@@ -148,6 +273,9 @@ function init(){
             alert(`${producto.nombre} agregado al carrito!`);
             actualizarContadorCarrito(); // Actualizar el contador después de agregar.
         }
+
+        // Escuchadores.
+        // Escuchador de los botones de compra.
         // Iteramos por cada botón del NodeList 'botonesCompra' usando el método 'forEach'.
         botonesCompra.forEach(boton => {
             // Por cada botón escuchamos a ver si lo presionan.
@@ -155,6 +283,7 @@ function init(){
                 // Si lo presionan llamamos la funcion que toma la info del producto y la guarda en una variable.
                 const producto = obtenerDetallesProducto(boton);
                 agregarAlCarrito(producto); // Agregamos esa variable al carrito.
+                alert(carrito.length)
             });
         });
     }
